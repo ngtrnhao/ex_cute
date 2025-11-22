@@ -7,7 +7,7 @@ app.use(express.json());
 app.post("/run", async (req, res) => {
   const { code } = req.body;
   if (!code) {
-    return res.status(400).json({ error: "Không có mã nguồn để thực thi" });
+    return res.status(400).json({ error: "No code provided to execute" });
   }
   try {
     const output = await executePython(code);
@@ -19,6 +19,5 @@ app.post("/run", async (req, res) => {
 
 const PORT = 3000;
 app.listen(PORT, () => {
-  console.log(`Server đang chạy tại http://localhost:${PORT}`);
+  console.log(`Server is running at http://localhost:${PORT}`);
 });
-

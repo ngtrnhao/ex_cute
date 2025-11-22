@@ -12,7 +12,7 @@ const executePython = (code) => {
 
     //Write code to the temp file
     fs.writeFileSync(filepath, code);
-    console.log(`[${jodId}] File created: ${filepath}`);
+    console.log(`[${jobId}] File created: ${filepath}`);
 
     //TODO: Call spawn to excute file
 
