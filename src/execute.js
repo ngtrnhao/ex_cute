@@ -14,10 +14,36 @@ const executePython = (code) => {
     fs.writeFileSync(filepath, code);
     console.log(`[${jobId}] File created: ${filepath}`);
 
-    //TODO: Call spawn to excute file
-    
-    //Mock output
-    resolve("It not run yet, just a mock output!!!");
+    const pythonProcess = spawn("python", [filepath]);
+
+    let output = "";
+    let errorOutput = "";
+
+    pythonProcess.stdout.on("data", (data) => {
+      output += data.toString();
+    });
+
+    pythonProcess.stderr.on("data", (data) => {
+      errorOutput += data.toString();
+    });
+
+    pythonProcess.on("close", (code) => {
+      console.log(`[${jobId}] Process exited with code ${code}`);
+
+      try {
+        fs.unlinkSync(filepath);
+        console.log(`[${jobId} Temporary file deleted]`);
+      } catch (error) {
+        console.error(
+          `$[jobId] Error deleting temporary file: ${error.message}`
+        );
+      }
+      if (code !== 0) {
+        reject(new Error(errorOutput || "Unknown error occurred"));
+      } else {
+        resolve(output);
+      }
+    });
   });
 };
 
